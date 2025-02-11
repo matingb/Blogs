@@ -1,11 +1,11 @@
-A/B Testing con Split: ¿Qué es y por que deberías usarlo para potenciar tus decisiones?
+A/B Testing con Split: ¿Qué es y por qué deberías usarlo para potenciar tus decisiones?
 
 ¿Alguna vez te encontraste en la situación de realizar un cambio en tu sistema sin saber si era el camino indicado? Este es uno de los motivos por el cual A/B testing se ha convertido en una práctica popular para optimizar productos digitales, y por eso plataformas como Split vienen a no solo facilitar su implementación, sino que también la llevan al siguiente nivel al simplificar la gestión de sus experimentos.
 En este blog, no solo explicaremos cómo funciona el A/B testing, sino que también exploraremos cómo Split facilita su implementación, manteniendo tu código limpio y tu equipo productivo.
 
 ¿Qué es el A/B testing?
 Antes de profundizar, empecemos por lo básico: ¿qué es el A/B testing?
-Es una técnica utilizada para comparar dos versiones de un elemento con el objetivo de determinar cuál genera mejores resultados. Por ejemplo, imagina una página web con un botón rojo (versión A). Decides probar cómo reaccionan los usuarios a un botón azul (versión B). En este caso, la prueba consiste en dividir a los usuarios en dos grupos: uno verá la versión A y el otro la versión B. A partir de ahí, evalúas cuál es más efectivo según la métrica que definas, como la cantidad de clics.
+Es una técnica para comparar dos versiones de un elemento para determinar cuál genera mejores resultados. Por ejemplo, imagina una página con un botón rojo (versión A). Decides probar cómo reaccionan los usuarios a un botón azul (versión B). En este caso, la prueba consiste en dividir a los usuarios en dos grupos: uno verá la versión A y el otro la versión B. A partir de ahí, evalúas cuál es más efectivo según la métrica que definas, como la cantidad de clics.
 Al finalizar la prueba, el botón que haya recibido el mayor porcentaje de clics en relación a las vistas será el ganador y, por lo tanto, la versión que permanecerá en la página. 
 💡 Diferencial de Split: A diferencia de una implementación manual, Split facilita la ejecución de pruebas con más de dos versiones en simultáneo, lo que acelera el flujo de experimentación y la obtención de resultados.
 
@@ -18,28 +18,36 @@ Por ejemplo, si estás desarrollando una nueva interfaz, cambiando la arquitectu
 
 Reversión inmediata en caso de fallos
 Otro gran beneficio del uso de feature flags es la capacidad de realizar una reversión inmediata de cambios sin necesidad de un nuevo re-despliegue.
-Realizar despliegues utilizando feature flags no solo resulta útil para evaluar métricas, sino que también aporta seguridad y confianza al sistema. En caso de que una funcionalidad falle o un experimento no arroje los resultados esperados, herramientas como Split te permiten desactivarlo al instante, sin requerir un nuevo despliegue. Esto no solo minimiza el impacto de errores en producción, sino que también proporciona al equipo la confianza necesaria para experimentar con mayor agilidad y menos riesgos.
+Realizar despliegues utilizando feature flags no solo resulta útil para evaluar métricas, sino que también aporta seguridad y confianza al sistema. En caso de que una funcionalidad falle o un experimento no arroje los resultados esperados, la reversión es rápida y sencilla.
+💡 Gestión eficiente con Split → Herramientas como Split te permite desactivarlo al instante, sin necesidad de un nuevo despliegue. Esto no solo minimiza el impacto de errores en producción, sino que también proporciona al equipo la confianza necesaria para experimentar con mayor agilidad y menos riesgos. 🚀
 
 El lado oscuro del A/B testing: complejidad en el código
-No todo es tan perfecto como parece. Estos beneficios también vienen acompañados de  complejidad técnica que puede ser introducida en el código, especialmente cuando se implementa a gran escala.
-Feature flags por todos lados: Uno de los principales smells de que las pruebas se están saliendo de control, es el poseer muchos flags afectando el mismo flujo del sistema. Esto puede resultar en un código altamente ramificado donde diferentes usuarios ven diferentes experiencias. Mantener este caos bajo control es un reto, ya que a la hora de realizar una modificación hay que tener en cuenta cada una de las variantes y como ellas se ven afectadas por alguna de las otras pruebas que estamos realizando. Por eso es importante tener cierta comprensión de los experimentos que estamos haciendo para no generar este árbol de pruebas y además eliminar los experimentos perdedores a medida que vayamos obteniendo resultados.
+No todo es tan perfecto como parece. A/B testing es una gran herramienta, pero puede complicar el código cuando se implementa a gran escala.
+Imagina Pods, una plataforma donde los usuarios configuran el alquiler y traslado de containers paso a paso. Se lanzaron experimentos para evaluar si reordenar pasos, quitar opciones o agregar nuevas generaba un impacto en las ventas.
+Al principio, todo parecía simple: unos cuantos feature flags para comparar versiones y medir conversiones. Pero con el tiempo, los experimentos se multiplicaron sin control. Cada cambio añadía nuevas combinaciones posibles, y lo que empezó como una optimización terminó siendo un laberinto de versiones imposibles de manejar.
 
-¿Por qué usar Split para A/B testing?
-Implementar A/B testing a mano puede ser un dolor de cabeza, especialmente cuando manejas múltiples experimentos. Para esto Split proporciona algunas funcionalidades que pueden facilitarnos a la hora de lidiar con feature flags.
+Feature flags descontrolados: una receta para el caos
+Uno de los principales code smells es la presencia de demasiados feature flags afectando el mismo flujo del sistema.
+En nuestro caso, había flags para:
+✅ Modificar el orden de los pasos.
+✅ Cambiar el diseño de algunas pantallas.
+✅ Agregar o quitar preguntas opcionales.
+Cada flag afectaba la experiencia del usuario de manera diferente, lo que significaba que había varios posibles caminos dentro del mismo flujo. Quizás se puede argumentar que la estrategia de testing no fue la adecuada pero las pruebas automatizadas no fueron suficientes. Esto llevó a que cada despliegue requiriera pruebas exhaustivas, ya que cualquier cambio podía interferir con otro experimento en curso.
+Con Split, podíamos visualizar mejor qué experimentos estaban activos, pero la falta de una estrategia clara hizo que la cantidad de combinaciones creciera sin control. El equipo terminó invirtiendo más tiempo en resolver bugs y realizar smoke testing de todas las variantes que en analizar los resultados o generar nuevas funcionalidades. Al final, el proyecto se volvió inmanejable y muchos de los experimentos quedaron sin implementarse porque el costo de mantenimiento era mayor que el beneficio esperado.
+¿Cómo identificar el exceso de experimentos?
+La forma más sencilla de evitar este caos es usar feature flags solo cuando realmente aportan valor. Pero, si esta es una técnica tan poderosa, ¿cuándo es mejor simplemente implementar un cambio sin un flag?
+Estas son tres señales de que el uso de feature flags se está volviendo un problema:
+🔴 Demasiados flags en el mismo flujo → Si cada paso de un proceso tiene múltiples versiones activas, la complejidad se vuelve inmanejable.
+🔴 Pruebas que generan más problemas que soluciones → Si validar un experimento toma más tiempo que su beneficio, mejor replantearlo.
+🔴 Experimentos que nunca terminan → Si una prueba lleva meses sin conclusiones claras, probablemente sea mejor decidir con datos previos y avanzar.
 
-Feature flags dinámicos:
-Con Split, puedes habilitar o deshabilitar funcionalidades en tiempo real, sin necesidad de realizar nuevos despliegues. Esto te permite:
-✅ Ajustar experimentos sobre la marcha.
-✅ Desactivar rápidamente cambios problemáticos.
-✅ Activar nuevas funcionalidades de forma gradual.
-
-Segmentación avanzada:
-Split te permite segmentar usuarios según criterios específicos (ubicación, tipo de dispositivo e incluso a partir de atributos customizables que se proporciones.). Esto brinda mayor flexibilidad y libertad a la hora de realizar experimentos.
-
-Integración con herramientas de análisis:
-Split se conecta con múltiples plataformas como Google Analytics, Datadog, y otras herramientas de monitoreo, para analizar los resultados de tus experimentos directamente en tu ecosistema de datos.
-
+En el caso de Pods, la solución fue simplificar los experimentos:
+✅ Reducir la cantidad de flags activos simultáneamente.
+✅ Eliminar pruebas que no generaban impacto en la conversión.
+✅ Implementar una política de "limpieza de experimentos" para evitar que flags 
+El resultado fue un flujo de trabajo más ágil, menos errores en producción y una estrategia de experimentación más efectiva.
+💡 Split como aliado → Split facilitó este proceso al ofrecer una gestión centralizada de los experimentos. Permite visualizar qué pruebas están activas, y de esta forma eliminarlas cuando ya no aportan valor y evitar que el código se llene de flags innecesarios.
 Conclusión
-El A/B testing es una estrategia poderosa para tomar decisiones basadas en datos y mejorar productos digitales. Sin embargo, su implementación manual puede ser compleja y difícil de mantener.
-Split.io no solo simplifica la gestión de experimentos, sino que también agiliza el proceso, reduce riesgos y mantiene el código limpio gracias a su enfoque en feature flags dinámicos, segmentación avanzada y reversión inmediata de cambios.
-Si buscas optimizar tus pruebas y mejorar la toma de decisiones sin comprometer la estabilidad de tu sistema, Split es la herramienta ideal para llevar tu A/B testing al siguiente nivel. 🚀
+El A/B testing es una estrategia poderosa para tomar decisiones basadas en datos y mejorar productos digitales. Sin embargo, su implementación puede ser compleja y difícil de mantener. Si los experimentos se acumulan sin control, el código se vuelve difícil de mantener, los tiempos de desarrollo se disparan y los beneficios esperados terminan perdiéndose.
+Más experimentos no siempre significan mejores resultados. Es clave definir cuándo realmente vale la pena probar una variante y cuándo es mejor simplemente hacer el cambio.
+Si bien los feature flags son una gran herramienta, su uso debe ser estratégico. Mantener un equilibrio entre experimentación y simplicidad es la clave para aprovechar al máximo el A/B testing sin caer en el caos. 🚀
